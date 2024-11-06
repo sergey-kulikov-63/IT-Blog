@@ -5,6 +5,13 @@
     <title>Главная</title>
 </head>
 <body>
-
+    <div th:each="post : ${posts}">
+            <h2 th:text="${post.getTitle()}"></h2>
+            <p th:text="${post.getDescription()}"></p>
+            <img th:src="'data:image/jpeg;base64,' + ${post.getImg()}" alt="Img" width="200">
+    </div>
+<a href="/create-post">
+    <button>Добавить новый пост</button>
+</a>
 </body>
 </html>
