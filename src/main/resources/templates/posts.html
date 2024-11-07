@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная</title>
+</head>
+<body>
+<div th:each="post : ${posts}">
+    <h2><a th:href="'/posts/' + ${post.getPostUrl()}" th:text="${post.getTitle()}"></a></h2>
+    <p th:text="${post.description}"></p>
+    <img th:src="'data:image/jpeg;base64,' + ${post.postImg}" alt="Img" width="200">
+</div>
+
+<a href="/posts/create-post">
+    <button>Добавить новый пост</button>
+</a>
+</body>
+</html>
+<style>
+    a {
+        text-decoration: none;
+        color: black;
+    }
+</style>

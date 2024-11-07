@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${post.getTitle()}"></title>
+</head>
+<body>
+    <h1 th:text="${post.getTitle()}"></h1>
+    <p th:text="${post.getDescription()}"></p>
+    <img th:src="'data:image/jpeg;base64,' + ${post.getPostImg()}" alt="Post Image" width="300">
+    <div th:text="${post.getText()}"></div>
+</body>
+</html>

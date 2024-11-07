@@ -12,16 +12,18 @@ public class Post {
     private Long id;
     private String title;
     @Column(columnDefinition = "TEXT")
-    private String img;
+    private String postImg;
     private String description;
     @Column(columnDefinition = "TEXT")
     private String text;
+    private String postUrl;
 
-    public Post(String title, String img, String description, String text) {
+    public Post(String title, String postImg, String description, String text, String postUrl) {
         this.title = title;
-        this.img = img;
+        this.postImg = postImg;
         this.description = description;
         this.text = text;
+        this.postUrl = postUrl;
     }
 
     public Post() {
