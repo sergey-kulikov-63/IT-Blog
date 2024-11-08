@@ -1,8 +1,12 @@
 package com.it_blog.ITBlog.controllers;
 
 import com.it_blog.ITBlog.models.Post;
+import com.it_blog.ITBlog.models.User;
 import com.it_blog.ITBlog.repos.PostRepo;
+import com.it_blog.ITBlog.repos.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +19,10 @@ import java.util.Base64;
 public class MainController {
     @Autowired
     private PostRepo postRepo;
+    @Autowired
+    private UserRepo userRepo;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/")
     public String redirectToPosts() {
@@ -22,7 +30,9 @@ public class MainController {
     }
 
     @GetMapping("/posts")
-    public String postsPage(Model model) {
+    public String postsPage(Authentication a, Model model) {
+        if (a != null)
+            model.addAttribute("user", userRepo.findByUsername(a.getName()));
         model.addAttribute("posts", postRepo.findAll());
         return "posts";
     }
@@ -48,10 +58,25 @@ public class MainController {
     }
     @GetMapping("/login")
     public String login() {
-        return "login"; // Страница для логина
+        return "login";
     }
     @GetMapping("/access-denied")
     public String accessDenied() {
-        return "accessDenied"; // Страница ошибки прав доступа
+        return "accessDenied";
+    }
+    @GetMapping("/signup")
+    public String registrationForm() {
+        return "signup";
+    }
+    @PostMapping("/signup")
+    public String registerUser(@RequestParam String username,
+                               @RequestParam String password, Model model) {
+        if (userRepo.findByUsername(username) == null) {
+            userRepo.save(new User(username, passwordEncoder.encode(password), "USER"));
+            return "redirect:/posts";
+        } else {
+            model.addAttribute("error", "Username " + username + " already in use");
+            return "signup";
+        }
     }
 }

@@ -2,19 +2,28 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Вход</title>
+    <title>Регистрация</title>
 </head>
 <body>
+
 <div class="container">
-    <h2>Вход</h2>
-        <form th:action="@{/login}" method="post">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username"><br>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password"><br>
-            <button type="submit">Войти</button>
-</form>
+    <h2>Регистрация</h2>
+
+    <form th:action="@{/signup}" method="post">
+        <label for="username">Имя пользователя:</label>
+        <input type="text" id="username" name="username" required />
+
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" required />
+
+        <button type="submit">Зарегистрироваться</button>
+
+        <div th:if="${error}" class="error">
+            <p th:text="${error}"></p>
+        </div>
+    </form>
 </div>
+
 </body>
 </html>
 <style>
