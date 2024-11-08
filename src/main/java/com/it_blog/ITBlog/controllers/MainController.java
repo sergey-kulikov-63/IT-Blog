@@ -46,4 +46,12 @@ public class MainController {
         model.addAttribute("post", postRepo.findByPostUrl(postUrl));
         return "view-post";
     }
+    @GetMapping("/login")
+    public String login() {
+        return "login"; // Страница для логина
+    }
+    @GetMapping("/access-denied")
+    public String accessDenied() {
+        return "accessDenied"; // Страница ошибки прав доступа
+    }
 }
