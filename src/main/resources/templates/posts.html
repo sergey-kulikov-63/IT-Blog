@@ -4,45 +4,52 @@
 <head>
     <meta charset="UTF-8">
     <title>Главная</title>
+    <style>
+        /* Стили для кнопок, чтобы они располагались в ряд */
+        .button-container {
+            display: flex; /* Используем flexbox */
+            gap: 10px; /* Расстояние между кнопками */
+        }
+
+        button {
+            padding: 10px 20px; /* Добавим немного отступов для кнопок */
+            font-size: 16px; /* Размер шрифта для кнопок */
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+        }
+    </style>
 </head>
 <body>
-<h1 sec:authorize="isAnonymous()">Добро пожаловать, незнакомец</h1>
-<h1 sec:authorize="hasRole('USER')" th:text="'Добро пожаловать, ' + ${user.getUsername()}"></h1>
-<h1 sec:authorize="hasRole('ADMIN')" th:text="'Добро пожаловать, ' + ${user.getUsername()}"></h1>
+
+<h1 sec:authorize="isAnonymous()">Welcome to the Post Page, Anon!</h1>
+<h1 sec:authorize="hasRole('USER')">Welcome to the Post Page, User!</h1>
+<h1 sec:authorize="hasRole('ADMIN')">Welcome to the Post Page, Admin!</h1>
+
 <br>
+
 <div class="button-container">
     <a sec:authorize="isAnonymous()" href="/login">
-        <button>Войти</button>
-    </a>
-    <a sec:authorize="isAnonymous()" href="/signup">
-        <button>Зарегестрироваться</button>
+        <button>LOG IN</button>
     </a>
     <form sec:authorize="hasAnyRole('USER','ADMIN')" th:action="@{/logout}" method="post">
-        <button type="submit">Выйти</button>
+        <button type="submit">LOG OUT</button>
     </form>
 </div>
+
 <div th:each="post : ${posts}">
     <h2><a th:href="'/posts/' + ${post.getPostUrl()}" th:text="${post.getTitle()}"></a></h2>
     <p th:text="${post.getDescription()}"></p>
     <img th:src="'data:image/jpeg;base64,' + ${post.postImg}" alt="Img" width="200">
 </div>
+
 <br>
+
 <a sec:authorize="hasRole('ADMIN')" href="/posts/create-post">
     <button>Добавить новый пост</button>
 </a>
+
 </body>
 </html>
-<style>
-    .button-container {
-        display: flex;
-        gap: 10px;
-    }
-    button {
-        padding: 10px 20px;
-        font-size: 16px;
-    }
-    a {
-        text-decoration: none;
-        color: black;
-    }
-</style>
