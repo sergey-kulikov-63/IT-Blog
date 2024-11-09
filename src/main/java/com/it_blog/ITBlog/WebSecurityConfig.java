@@ -25,8 +25,10 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/signup", "/login").permitAll()
                         .requestMatchers("/posts/create-post").hasRole("ADMIN")
+                        .requestMatchers("/posts/{postUrl}/delete").hasRole("ADMIN")
+                        .requestMatchers("/posts/{postUrl}/update").hasRole("ADMIN")
+                        .requestMatchers("/signup", "/login").permitAll()
                         .requestMatchers("/posts/{postUrl}").permitAll()
                         .requestMatchers("/posts").permitAll()
                         .requestMatchers("/").permitAll()

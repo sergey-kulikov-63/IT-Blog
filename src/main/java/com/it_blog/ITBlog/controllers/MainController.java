@@ -39,7 +39,7 @@ public class MainController {
 
     @GetMapping("/posts/create-post")
     public String createPostPage() {
-        return "create-post";
+        return "createPost";
     }
     @PostMapping("/posts/create-post")
     public String createPost(@RequestParam String title,
@@ -54,7 +54,33 @@ public class MainController {
     @GetMapping("/posts/{postUrl}")
     public String viewPost(@PathVariable String postUrl, Model model) {
         model.addAttribute("post", postRepo.findByPostUrl(postUrl));
-        return "view-post";
+        return "viewPost";
+    }
+    @GetMapping("/posts/{postUrl}/update")
+    public String updatePost(@PathVariable String postUrl, Model model) {
+        model.addAttribute("post", postRepo.findByPostUrl(postUrl));
+        return "updatePost";
+    }
+    @PostMapping("/posts/{postUrl}/update")
+    public String updatePost(@PathVariable String postUrl,
+                             @RequestParam String title,
+                             @RequestParam ("postImg") MultipartFile postImg,
+                             @RequestParam String description,
+                             @RequestParam String text) throws IOException {
+        Post post = postRepo.findByPostUrl(postUrl);
+        post.setTitle(title);
+        post.setDescription(description);
+        post.setText(text);
+        if (!postImg.isEmpty()){
+            post.setPostImg(Base64.getEncoder().encodeToString(postImg.getBytes()));
+        }
+        postRepo.save(post);
+        return "redirect:/posts/" + post.getPostUrl();
+    }
+    @PostMapping("/posts/{postUrl}/delete")
+    public String deletePost(@PathVariable String postUrl) {
+        postRepo.delete(postRepo.findByPostUrl(postUrl));
+        return "redirect:/posts";
     }
     @GetMapping("/login")
     public String login() {
