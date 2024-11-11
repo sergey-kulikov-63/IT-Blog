@@ -5,22 +5,32 @@
     <title th:text="'Редактировать ' + ${post.getTitle()}"></title>
 </head>
 <body>
+<h1 th:text="'Редактировать ' + ${post.getTitle()}"></h1>
 <form th:action="'/posts/' + ${post.getPostUrl()} + '/update'" method="post" enctype="multipart/form-data">
     <input type="text" th:value="${post.getTitle()}" id="title" name="title" required><br><br>
     <input type="file" id="postImg" name="postImg" accept=".jpg, .jpeg, .png"><br><br>
-    <textarea id="description" name="description" th:text="${post.getDescription()}" required/><br><br>
-    <textarea id="text" name="text" th:text="${post.getText()}" required/><br><br>
-    <button type="submit">Сохранить пост</button>
+    <textarea style="height: 50px" id="description" name="description" th:text="${post.getDescription()}" required/><br><br>
+    <textarea style="height: 150px" id="text" name="text" th:text="${post.getText()}" required/><br><br>
+    <button type="submit">Сохранить</button>
 </form>
 </body>
 </html>
 <style>
+    input, textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 4px;
+    }
     button {
+        margin: 0 10px;
         padding: 10px 20px;
         font-size: 16px;
+        cursor: pointer;
     }
-    a {
-        text-decoration: none;
-        color: black;
+    body {
+        padding: 20px;
+        margin: 50px;
+        text-align: center;
     }
 </style>

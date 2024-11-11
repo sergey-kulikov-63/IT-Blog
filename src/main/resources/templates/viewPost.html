@@ -3,24 +3,47 @@
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"><head>
     <meta charset="UTF-8">
     <title th:text="${post.getTitle()}"></title>
+
 </head>
-<body>
+<body style="text-align: center">
+<img th:src="'data:image/jpeg;base64,' + ${post.getPostImg()}" alt="Обложка" width="40%">
     <h1 th:text="${post.getTitle()}"></h1>
-    <p th:text="${post.getDescription()}"></p>
-    <img th:src="'data:image/jpeg;base64,' + ${post.getPostImg()}" alt="Post Image" width="300">
-    <div th:text="${post.getText()}"></div>
+<br>
+<hr>
+<br>
+    <div style="text-align: left" th:text="${post.getText()}"></div>
+<br>
+<hr>
+<br>
+
+<div class="button-container">
     <form sec:authorize="hasRole('ADMIN')" th:action="'/posts/' + ${post.getPostUrl()} + '/delete'" method="post">
         <button type="submit">Удалить пост</button>
     </form>
     <a sec:authorize="hasRole('ADMIN')" th:href="'/posts/' + ${post.getPostUrl()} + '/update'">
         <button>Редактировать пост</button>
     </a>
+</div>
+
+<div sec:authorize="isAnonymous()">
+    Смотреть комментарии и комментировать могут только авторизованные пользователи
+</div>
+    <a href="/">
+        <button style="margin-top: 10px;">Обратно к постам</button>
+    </a>
 </body>
 </html>
 <style>
+    .button-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+    }
     button {
+        margin: 0 10px;
         padding: 10px 20px;
         font-size: 16px;
+        cursor: pointer;
     }
     a {
         text-decoration: none;

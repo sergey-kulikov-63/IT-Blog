@@ -37,6 +37,7 @@ public class WebSecurityConfig {
                 .formLogin((form) -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/", true)
+                        .failureUrl("/login?error=true")
                         .permitAll()
                 )
                 .exceptionHandling((exception) -> exception
@@ -57,10 +58,10 @@ public class WebSecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> {
-            com.it_blog.ITBlog.models.User user = userRepo.findByUsername(username);
+        return login -> {
+            com.it_blog.ITBlog.models.User user = userRepo.findByLogin(login);
             if (user != null) {
-                return User.withUsername(user.getUsername())
+                return User.withUsername(user.getLogin())
                         .password(user.getPassword())
                         .roles(user.getRole())
                         .build();

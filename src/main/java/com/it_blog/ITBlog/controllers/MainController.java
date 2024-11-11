@@ -32,7 +32,7 @@ public class MainController {
     @GetMapping("/posts")
     public String postsPage(Authentication a, Model model) {
         if (a != null)
-            model.addAttribute("user", userRepo.findByUsername(a.getName()));
+            model.addAttribute("user", userRepo.findByLogin(a.getName()));
         model.addAttribute("posts", postRepo.findAll());
         return "posts";
     }
@@ -41,15 +41,22 @@ public class MainController {
     public String createPostPage() {
         return "createPost";
     }
+
     @PostMapping("/posts/create-post")
     public String createPost(@RequestParam String title,
-                             @RequestParam ("postImg") MultipartFile postImg,
+                             @RequestParam("postImg") MultipartFile postImg,
                              @RequestParam String description,
                              @RequestParam String text,
-                             @RequestParam String postUrl) throws IOException {
-        postRepo.save(new Post(title,Base64.getEncoder().encodeToString(postImg.getBytes()),
-                description,text,postUrl));
-        return "redirect:/posts";
+                             @RequestParam String postUrl, Model model) throws IOException {
+        if (postRepo.findByPostUrl(postUrl) != null) {
+            // Если пост с таким URL существует, передаем ошибку в модель
+            model.addAttribute("errorUrl", true);
+            return "createPost";  // Возвращаемся на страницу создания поста с ошибкой
+        }
+        postRepo.save(new Post(title,
+                Base64.getEncoder().encodeToString(postImg.getBytes()),
+                description, text, postUrl));
+        return "redirect:/posts";  // Перенаправляем на страницу всех постов
     }
     @GetMapping("/posts/{postUrl}")
     public String viewPost(@PathVariable String postUrl, Model model) {
@@ -95,13 +102,13 @@ public class MainController {
         return "signup";
     }
     @PostMapping("/signup")
-    public String registerUser(@RequestParam String username,
+    public String registerUser(@RequestParam String name, @RequestParam String login,
                                @RequestParam String password, Model model) {
-        if (userRepo.findByUsername(username) == null) {
-            userRepo.save(new User(username, passwordEncoder.encode(password), "USER"));
+        if (userRepo.findByLogin(login) == null) {
+            userRepo.save(new User(name, login, passwordEncoder.encode(password), "USER"));
             return "redirect:/posts";
         } else {
-            model.addAttribute("error", "Username " + username + " already in use");
+            model.addAttribute("error", "Логин " + login + " занято");
             return "signup";
         }
     }
