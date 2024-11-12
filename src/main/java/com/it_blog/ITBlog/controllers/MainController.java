@@ -25,29 +25,26 @@ public class MainController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("/")
-    public String redirectToPosts() {
-        return "redirect:/posts";
+    public String redirectToPosts(Authentication a) {
+        return (a == null) ? "redirect:/login" : "redirect:/posts";
     }
-
     @GetMapping("/posts")
     public String postsPage(Authentication a, Model model) {
-        if (a != null)
-            model.addAttribute("user", userRepo.findByLogin(a.getName()));
+        model.addAttribute("user", (a != null) ? userRepo.findByLogin(a.getName()) : null);
         model.addAttribute("posts", postRepo.findAll());
         return "posts";
     }
-
     @GetMapping("/posts/create-post")
     public String createPostPage() {
         return "createPost";
     }
-
     @PostMapping("/posts/create-post")
     public String createPost(@RequestParam String title,
                              @RequestParam("postImg") MultipartFile postImg,
                              @RequestParam String description,
                              @RequestParam String text,
-                             @RequestParam String postUrl, Model model) throws IOException {
+                             @RequestParam String postUrl,
+                             Model model) throws IOException {
         if (postRepo.findByPostUrl(postUrl) != null) {
             // Если пост с таким URL существует, передаем ошибку в модель
             model.addAttribute("errorUrl", true);
@@ -102,8 +99,10 @@ public class MainController {
         return "signup";
     }
     @PostMapping("/signup")
-    public String registerUser(@RequestParam String name, @RequestParam String login,
-                               @RequestParam String password, Model model) {
+    public String registerUser(@RequestParam String name,
+                               @RequestParam String login,
+                               @RequestParam String password,
+                               Model model) {
         if (userRepo.findByLogin(login) == null) {
             userRepo.save(new User(name, login, passwordEncoder.encode(password), "USER"));
             return "redirect:/posts";

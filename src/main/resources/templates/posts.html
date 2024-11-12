@@ -7,18 +7,11 @@
 </head>
 <body style="display:none; text-align: center">
 
-<h1 sec:authorize="isAnonymous()">Добро пожаловать</h1>
-<h1 sec:authorize="hasAnyRole('USER','ADMIN')"
-    th:text="'Добро пожаловать, ' + ${user.getName()}"></h1>
+<h1 th:text="'Добро пожаловать, ' + ${user.getName()}"></h1>
 
-<div class="button-container">
-    <a sec:authorize="isAnonymous()" href="/login"><button>Войти</button></a>
-    <a sec:authorize="isAnonymous()" href="/signup"><button>Зарегистрироваться</button></a>
-    <form sec:authorize="hasAnyRole('USER', 'ADMIN')" th:action="@{/logout}" method="post">
+    <form th:action="@{/logout}" method="post">
         <button type="submit">Выйти</button>
     </form>
-</div>
-
 <div class="posts-container">
     <div th:each="post : ${posts}">
         <a th:href="'/posts/' + ${post.getPostUrl()}">
@@ -46,11 +39,7 @@
 </html>
 
 <style>
-    .button-container {
-        display: flex;
-        justify-content: center;
-        margin-top: 30px;
-    }
+
     button {
         margin: 0 10px;
         padding: 10px 20px;
