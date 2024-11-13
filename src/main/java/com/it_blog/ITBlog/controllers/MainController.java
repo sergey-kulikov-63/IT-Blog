@@ -61,7 +61,7 @@ public class MainController {
         return "viewPost";
     }
     @GetMapping("/posts/{postUrl}/update")
-    public String updatePost(@PathVariable String postUrl, Model model) {
+    public String updatePostPage(@PathVariable String postUrl, Model model) {
         model.addAttribute("post", postRepo.findByPostUrl(postUrl));
         return "updatePost";
     }
@@ -95,11 +95,11 @@ public class MainController {
         return "accessDenied";
     }
     @GetMapping("/signup")
-    public String registrationForm() {
+    public String signupPage() {
         return "signup";
     }
     @PostMapping("/signup")
-    public String registerUser(@RequestParam String name,
+    public String signup(@RequestParam String name,
                                @RequestParam String login,
                                @RequestParam String password,
                                Model model) {
